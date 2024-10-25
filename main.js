@@ -37,11 +37,23 @@ randomFood.appendChild(createFoodCard(foodStock[0]));
 // - THE DISPLAYED CARD WILL BE REMOVED.
 // - A NEW RANDOM FOOD CARD SHOULD BE DISPLAYED.
 
+const button = document.querySelector('button');
+button.addEventListener('click', event => {
+  let i = Math.floor(Math.random() * foodStock.length);
+  randomFood.replaceChildren(createFoodCard(foodStock[i]));
+})
+
 // 2. DISPLAY ALL
 // TODO: THE view-all-food ELEMENT IS EMPTY
 // - HOW CAN YOU REMOVE THE ...?
 // - HOW CAN YOU ITERATE THROUGH THE foodStock ARRAY AND CREATE A CARD FOR EACH?
 // - HOW CAN YOU ADD THEM TO THE HTML ELEMENT?
+const viewAll = document.querySelector('.view-all-food');
+if(foodStock.length > 0) viewAll.innerHTML = '';
+for(i = 0; i < foodStock.length; i++){
+  viewAll.appendChild(createFoodCard(foodStock[i]));
+}
+
 
 // 3. THE EVENT
 // THE CODE BELOW
@@ -56,6 +68,9 @@ titles.forEach((title) => {
     console.log(event.target);
     event.target.style.color = "orange";
   });
+  title.addEventListener("mouseout", (event) => {
+    event.target.style.color = "black";
+  })
 });
 
 // TODO:
@@ -68,15 +83,20 @@ const form = document.querySelector(".food-form");
 form.addEventListener("submit", (event) => {
   // STOPS A FORM FROM SUBMITTING ALLOWING YOU TO HANDLE THE SUBMISSION WITH JAVASCRIPT INSTEAD
   event.preventDefault();
-  console.log(event);
-
-  // - HOW DO YOU GET A INPUT VALUE(S) FROM A FORM EVENT?
+  let data = new FormData(event.target);
+  console.log([...data.entries()]);
 
   const foodObject = {};
   // - HOW DO YOU ADD THE VALUES TO THE foodObject?
-  foodObject.name = "";
-  foodObject.price = "";
-  foodObject.img = "";
+  foodObject.name = data.get("name");
+  foodObject.price = data.get("price");
+  foodObject.img = data.get("emoji");
+  foodObject.foodType = data.get("type");
+
+  foodStock.push(foodObject);
+  console.log(foodStock)
 
   // HOW CAN YOU UPDATE THE view-all-food CONTAINER TO HAVE THE NEW foodObject?
+  viewAll.appendChild(createFoodCard(foodStock[foodStock.length-1]));
 });
+
